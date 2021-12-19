@@ -18,7 +18,7 @@ class CreateShortLinksTable extends Migration
             $table->string('long_url');
             $table->string('code');
 //            $table->string('tags');
-            $table->string('title');
+            $table->string('title')->nullable();
 //            $table->integer('count')->default(0);
 //            $table->integer('unique_count')->default(0);
             $table->timestamps();
