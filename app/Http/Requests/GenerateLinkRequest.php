@@ -25,8 +25,9 @@ class GenerateLinkRequest extends FormRequest
     {
         return [
             'long_url'=>'required|array',
-            'long_url.*'=>'required|url',
+            'long_url.*'=>'required|active_url',
             'tags'=>'present|array',
+            'tags.*'=>'present|string',
 //            'title'=>'present',
         ];
     }
