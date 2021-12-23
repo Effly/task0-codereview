@@ -22,12 +22,6 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::post('/links',[ShortLinkController::class,'store'])->name('generate.link');
-Route::patch('/links/{id}',[ShortLinkController::class,'update'])->name('update.link');
-Route::delete('/links/{id}',[ShortLinkController::class,'delete'])->name('delete.link');
-Route::get('/links/{id}',[ShortLinkController::class,'getById'])->name('getById.link');
-Route::get('/links',[ShortLinkController::class,'index'])->name('getAll.link');
-
 Route::get('{code}',[ShortLinkController::class, 'followShortLink'])->name('followShortLink');
 
 //Route::get('/stats{id}')

@@ -3,88 +3,68 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\GenerateLinkRequest;
+use App\Interfaces\ShortLinkInterface;
 use App\Models\ShortLink;
 use App\Models\Tags;
 use App\Models\Viewers;
 use App\Services\CodeService;
+use App\Services\ShortLinkService;
 use App\Services\TitleService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class ShortLinkController extends Controller
 {
-    /**
-     * @var TitleService
-     */
-    private $titleService;
-    /**
-     * @var CodeService
-     */
-    private $codeService;
 
-    public function __construct(
-//        TitleService $titleService,
-        CodeService $codeService)
+    /**
+     * @var ShortLinkInterface
+     */
+    private ShortLinkInterface $shortLink;
+
+    public function __construct(ShortLinkInterface $shortLink)
     {
-//        $this->titleService = $titleService;
-        $this->codeService = $codeService;
-
+        $this->shortLink = $shortLink;
     }
 
 
-    public function index(Request $request)
+    public function index()
     {
-//        dd($request->userAgent());
-//        return 1;
-        return view('shortenLinks');
+        return ShortLink::all('long_url','code','title');
     }
 
-    public function store(GenerateLinkRequest $request)
+    public function store(Request $request)
     {
-//        $request->dd();
-//        dd();
-//        $request->validated();
-        foreach (array_combine($request->validated()['long_url'], $request->validated()['tags']) as $long_url => $tag) {
-//            $link = ShortLink::create([
-//                'long_url' => $long_url,
-//                'title' => 'test title',
-////                (empty($request->validated()['title'])) ? $this->titleService->getTitle($request->validated()['long_url']) : $request->validated()['title'],
-//
-//                'code' => $this->codeService->getCode()
-//            ]);
-//            dd($link);
-//            $new_tag = Tags::create([
-//                'name' => $tag
-//            ]);
-//            $link->tags()->save(Tags::create(['name' => $tag]));
-
-            $link = new ShortLink();
-            $link->long_url = $long_url;
-            $link->title = 'test title';
-            $link->code = $this->codeService->getCode();
-            $link->save();
-
-//            dd($link);
-
-            $new_tag = new Tags();
-            $new_tag->name = $tag;
-
-            $link->tags()->save($new_tag);
-
-        }
-
-
+//        dd(url()->full());
+        return response()->json($this->shortLink->createShortLink($request->all()), 201);
     }
 
     public function followShortLink($code, Request $request)
     {
-        $fetchLink = ShortLink::where('code', $code)->first();
-        $viewer = Viewers::create([
-            'user_agent' => $request->userAgent(),
-            'ip' => $request->ip()
-        ]);
+
+        $fetchLink = ShortLink::where('code', $code)->firstOrFail();
+
+        $viewer = new Viewers();
+        $viewer->user_agent = $request->userAgent();
+        $viewer->ip = $request->ip();
+
         $fetchLink->viewers()->save($viewer);
 
         return redirect($fetchLink->long_url);
+    }
+
+    public function update($code)
+    {
+
+    }
+
+    public function delete($code)
+    {
+        if (ShortLink::where('code', $code)->firstOrFail()->destroy()) return response()->json(null, 204);
+
+    }
+
+    public function getShortLinkByCode($code)
+    {
+        return response()->json(url(ShortLink::where('code', $code)->firstOrFail()->code), 201);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-class ShortLinkInterface
+interface ShortLinkInterface
 {
-
+    public function createShortLink($data);
 }

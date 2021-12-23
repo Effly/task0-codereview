@@ -3,23 +3,19 @@
 
 namespace App\Services;
 
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 use App\Interfaces\TitleInterface;
 
-class Crawler implements TitleInterface
+class TitleService implements TitleInterface
 {
 
-    /**
-     * @var \App\Services\Crawler
-     */
-    private $crawler;
 
-    public function __construct(DomCrawler $crawler){
-        $this->crawler = $crawler;
-    }
-
-    public function getTitle($html)
+    public function getTitle($long_url): string
     {
-        return $this->crawler->filter('title')->text();
+        $crawler = new Crawler(null,$long_url);
+
+        $crawler->addHtmlContent(file_get_contents($long_url));
+        return $crawler->filter('title')->text();
     }
 }
