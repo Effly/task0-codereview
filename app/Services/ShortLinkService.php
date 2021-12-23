@@ -2,19 +2,20 @@
 
 namespace App\Services;
 
+use App\Interfaces\ShortLinkInterface;
 use App\Models\ShortLink;
 use App\Models\Tags;
 
-class ShortLinkService implements \App\Interfaces\ShortLinkInterface
+class ShortLinkService implements ShortLinkInterface
 {
     /**
      * @var TitleService
      */
-    private $titleService;
+    private TitleService $titleService;
     /**
      * @var CodeService
      */
-    private $codeService;
+    private CodeService $codeService;
 
     public function __construct(
         TitleService $titleService,
@@ -25,7 +26,7 @@ class ShortLinkService implements \App\Interfaces\ShortLinkInterface
 
     }
 
-    public function getShortLink($data): array
+    public function createShortLink($data): array
     {
         $shortLinks = [];
 
