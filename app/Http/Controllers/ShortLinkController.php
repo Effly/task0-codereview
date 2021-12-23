@@ -19,9 +19,9 @@ class ShortLinkController extends Controller
     /**
      * @var ShortLinkInterface
      */
-    private $shortLink;
+    private ShortLinkInterface $shortLink;
 
-    public function __construct(ShortLinkService $shortLink)
+    public function __construct(ShortLinkInterface $shortLink)
     {
         $this->shortLink = $shortLink;
     }
@@ -35,13 +35,13 @@ class ShortLinkController extends Controller
     public function store(Request $request)
     {
 //        dd(url()->full());
-        return response()->json($this->shortLink->getShortLink($request->all()), 201);
+        return response()->json($this->shortLink->createShortLink($request->all()), 201);
     }
 
     public function followShortLink($code, Request $request)
     {
 
-        $fetchLink = ShortLink::where('code', $code)->first();
+        $fetchLink = ShortLink::where('code', $code)->firstOrFail();
 
         $viewer = new Viewers();
         $viewer->user_agent = $request->userAgent();
@@ -65,6 +65,6 @@ class ShortLinkController extends Controller
 
     public function getShortLinkByCode($code)
     {
-        if (ShortLink::where('code', $code)->firstOrFail()) response()->json(url(ShortLink::where('code', $code)->firstOrFail()->code), 201);
+        return response()->json(url(ShortLink::where('code', $code)->firstOrFail()->code), 201);
     }
 }
