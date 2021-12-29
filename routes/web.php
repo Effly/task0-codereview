@@ -15,6 +15,8 @@ use App\Http\Controllers\ShortLinkController;
 */
 
 Route::get('/', function () {
+//    dd(123);
+    return phpinfo();
     return view('welcome');
 });
 
@@ -22,7 +24,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('{code}',[ShortLinkController::class, 'followShortLink'])->name('followShortLink');
+Route::get('/{code}',[ShortLinkController::class, 'followShortLink'])->name('followShortLink');
 
 //Route::get('/stats{id}')
 
