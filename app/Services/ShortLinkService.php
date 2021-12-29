@@ -61,7 +61,6 @@ class ShortLinkService implements ShortLinkInterface
     public function getStatsByShortLink($shortLink): array
     {
         $code = explode('https://m88cloud.ibg.ru:88/',$shortLink)[1];
-//        return $code;
         $link = ShortLink::where('code', $code)->firstOrFail();
         return $link->viewers()->orderBy('created_at', 'desc')->get(['user_agent', 'ip', 'created_at'])
             ->groupBy(function ($items) {
@@ -80,17 +79,6 @@ class ShortLinkService implements ShortLinkInterface
     public function getStats(): object
     {
         $allLinks = ShortLink::all();
-//        return [
-//            'short_link'=>$allLinks->map(function ($item) {Log::info($item->code);  return 'https://m88cloud.ibg.ru:88/'.$item->code;}),
-//            'unique_views' => array_sum($allLinks->map(function ($item) {
-//                return $item->viewers()->get()->unique(function ($item) {
-//                    return $item['user_agent'] . $item['ip'];
-//                })->count();
-//            })->toArray()),
-//            'total_views' => Viewers::all()->count(),
-//            'title'=>$allLinks->map(function ($item) {return $item->title;}),
-//        ];
-
         return $allLinks->map(function ($item) {
             Log::info($item->code);
             return [
