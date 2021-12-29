@@ -4,6 +4,8 @@ use App\Http\Controllers\ShortLinkController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StatsController;
+use Telegram\Bot\Api;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,10 +28,12 @@ Route::get('/links/{id}',[ShortLinkController::class,'getById'])->name('getById.
 Route::get('/links',[ShortLinkController::class,'index'])->name('getAll.link');
 
 
-Route::get('/stats/{code}',[StatsController::class,'getStatsByCode'])->name('getStatsByCode');
+Route::get('/stats/{code}',[StatsController::class,'getStatsByShortLink'])->name('getStatsByCode');
 Route::get('/stats',[StatsController::class,'getStats'])->name('getStats');
 
 
-
-
+Route::post('/tokenbot/webhook',function (){
+    Telegram::commandsHandler(true);
+    return 'ok';
+});
 
