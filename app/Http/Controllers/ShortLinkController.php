@@ -34,7 +34,6 @@ class ShortLinkController extends Controller
 
     public function store(Request $request)
     {
-//        dd(url()->full());
         return response()->json($this->shortLink->createShortLink($request->all()), 201);
     }
 
@@ -63,7 +62,7 @@ class ShortLinkController extends Controller
 
     }
 
-    public function getShortLinkByCode($code)
+    public function getStatsByShortLink($code): \Illuminate\Http\JsonResponse
     {
         return response()->json(url(ShortLink::where('code', $code)->firstOrFail()->code), 201);
     }
